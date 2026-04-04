@@ -10,10 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@b1nd/aid-kit": "^1.0.9",
+    "@b1nd/dodam-design-system": "^1.0.10",
     "axios": "^1.13.5",
+    "framer-motion": "^12.38.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.13.0"
+    "styled-components": "^6.3.12",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

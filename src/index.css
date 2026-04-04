@@ -1,47 +1,86 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css");
 @import "tailwindcss";
 
+/* DDS 토큰 기반 CSS 변수 - 커스텀 변수와 DDS 토큰 매핑 */
 :root {
-  --cu-bg: #F5F5F5;
-  --cu-panel: #FFFFFF;
+  /* DDS Core Tokens */
+  --dds-color-brand-primary: #0083F0;
+  --dds-color-brand-secondary: #0083f0a6;
+  --dds-color-text-primary: #0F0F10;
+  --dds-color-text-secondary: #6B7280;
+  --dds-color-text-tertiary: #9CA3AF;
+  --dds-color-text-placeholder: #9CA3AF;
+  --dds-color-text-disabled: #D1D5DB;
+  --dds-color-background-default: #F5F5F5;
+  --dds-color-background-surface: #FFFFFF;
+  --dds-color-border-normal: #E5E7EB;
+  --dds-color-border-strong: #D1D5DB;
+  --dds-color-fill-primary: #F3F4F6;
+  --dds-color-fill-secondary: #E5E7EB;
+  --dds-color-fill-hover: #E5E7EB;
+  --dds-color-status-success: #00BF40;
+  --dds-color-status-error: #FF4242;
+  --dds-color-status-warning: #FFC800;
+  --dds-color-status-info: #0083F0;
+  --dds-color-static-white: #FFFFFF;
+  --dds-color-static-black: #121212;
+
+  /* 커스텀 변수 (DDS 토큰 매핑) */
+  --cu-bg: var(--dds-color-background-default);
+  --cu-panel: var(--dds-color-background-surface);
   --cu-panel-soft: #f1f4f8;
   --cu-panel-muted: #e6ebf2;
-  --cu-line: #cfd7e1;
-  --cu-line-strong: #b8c4d1;
-  --cu-text: #172433;
-  --cu-muted: #5d6d7f;
-  --cu-accent: #1f6fd8;
+  --cu-line: var(--dds-color-border-normal);
+  --cu-line-strong: var(--dds-color-border-strong);
+  --cu-text: var(--dds-color-text-primary);
+  --cu-muted: var(--dds-color-text-secondary);
+  --cu-accent: var(--dds-color-brand-primary);
   --cu-accent-soft: #dbe9ff;
   --cu-accent-border: #a7c7f5;
-  --cu-success: #1f8b64;
+  --cu-success: var(--dds-color-status-success);
   --cu-success-soft: #dff2e9;
   --cu-success-border: #9fceb9;
-  --cu-danger: #b83a34;
+  --cu-danger: var(--dds-color-status-error);
   --cu-danger-soft: #f7e0df;
   --cu-danger-border: #e1aaa6;
   --cu-warning: #b16122;
   --cu-warning-soft: #f8e7d8;
   --cu-warning-border: #dfb186;
-  --cu-btn-blue: #8445f1;
-  --cu-btn-red: #ff4242;
+  --cu-btn-blue: var(--dds-color-brand-primary);
+  --cu-btn-red: var(--dds-color-status-error);
   --cu-neutral-btn: #5f6f82;
   --cu-focus-ring: #bcd3f3;
-  --cu-tabbar-bg: #E6E6E7;
-  --cu-tabbar-active: #FFFFFF;
+  --cu-tabbar-bg: var(--dds-color-fill-primary);
+  --cu-tabbar-active: var(--dds-color-background-surface);
   --cu-purple: #8445f1;
   --cu-purple-soft: #f0e8ff;
   --cu-purple-border: #c4a0f5;
 }
 
-.dark {
-  --cu-bg: #191A1A;
-  --cu-panel: #232424;
+[data-theme="dark"] {
+  /* DDS Dark Theme Tokens */
+  --dds-color-text-primary: #F5F5F5;
+  --dds-color-text-secondary: #A5B6C9;
+  --dds-color-text-tertiary: #7A8A9E;
+  --dds-color-text-placeholder: #7A8A9E;
+  --dds-color-text-disabled: #4A5568;
+  --dds-color-background-default: #191A1A;
+  --dds-color-background-surface: #232424;
+  --dds-color-border-normal: #404d5d;
+  --dds-color-border-strong: #526174;
+  --dds-color-fill-primary: #2D3748;
+  --dds-color-fill-secondary: #323d4c;
+  --dds-color-fill-hover: #3D4A5C;
+
+  /* 커스텀 변수 (다크 모드) */
+  --cu-bg: var(--dds-color-background-default);
+  --cu-panel: var(--dds-color-background-surface);
   --cu-panel-soft: #283240;
   --cu-panel-muted: #323d4c;
-  --cu-line: #404d5d;
-  --cu-line-strong: #526174;
-  --cu-text: #e2ebf5;
-  --cu-muted: #a5b6c9;
+  --cu-line: var(--dds-color-border-normal);
+  --cu-line-strong: var(--dds-color-border-strong);
+  --cu-text: var(--dds-color-text-primary);
+  --cu-muted: var(--dds-color-text-secondary);
   --cu-accent: #5f9af0;
   --cu-accent-soft: #244168;
   --cu-accent-border: #3d638f;
@@ -54,8 +93,54 @@
   --cu-warning: #e3a15f;
   --cu-warning-soft: #4d3929;
   --cu-warning-border: #6f543f;
-  --cu-btn-blue: #8445f1;
-  --cu-btn-red: #ff4242;
+  --cu-btn-blue: var(--dds-color-brand-primary);
+  --cu-btn-red: var(--dds-color-status-error);
+  --cu-neutral-btn: #5f6f82;
+  --cu-focus-ring: #3f608a;
+  --cu-tabbar-bg: #393A3B;
+  --cu-tabbar-active: #8C8D8F;
+  --cu-purple: #b48af7;
+  --cu-purple-soft: #2a1d4a;
+  --cu-purple-border: #5a3d8a;
+}
+
+/* 기존 .dark 클래스도 지원 (하위 호환성) */
+.dark {
+  --dds-color-text-primary: #F5F5F5;
+  --dds-color-text-secondary: #A5B6C9;
+  --dds-color-text-tertiary: #7A8A9E;
+  --dds-color-text-placeholder: #7A8A9E;
+  --dds-color-text-disabled: #4A5568;
+  --dds-color-background-default: #191A1A;
+  --dds-color-background-surface: #232424;
+  --dds-color-border-normal: #404d5d;
+  --dds-color-border-strong: #526174;
+  --dds-color-fill-primary: #2D3748;
+  --dds-color-fill-secondary: #323d4c;
+  --dds-color-fill-hover: #3D4A5C;
+
+  --cu-bg: var(--dds-color-background-default);
+  --cu-panel: var(--dds-color-background-surface);
+  --cu-panel-soft: #283240;
+  --cu-panel-muted: #323d4c;
+  --cu-line: var(--dds-color-border-normal);
+  --cu-line-strong: var(--dds-color-border-strong);
+  --cu-text: var(--dds-color-text-primary);
+  --cu-muted: var(--dds-color-text-secondary);
+  --cu-accent: #5f9af0;
+  --cu-accent-soft: #244168;
+  --cu-accent-border: #3d638f;
+  --cu-success: #4bc191;
+  --cu-success-soft: #244135;
+  --cu-success-border: #3e6957;
+  --cu-danger: #f07f78;
+  --cu-danger-soft: #4a2e2d;
+  --cu-danger-border: #6c4240;
+  --cu-warning: #e3a15f;
+  --cu-warning-soft: #4d3929;
+  --cu-warning-border: #6f543f;
+  --cu-btn-blue: var(--dds-color-brand-primary);
+  --cu-btn-red: var(--dds-color-status-error);
   --cu-neutral-btn: #5f6f82;
   --cu-focus-ring: #3f608a;
   --cu-tabbar-bg: #393A3B;

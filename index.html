@@ -3,10 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="/spot-logo.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#2563eb" />
+    <!-- DDS 테마 초기화 (Flash 방지) -->
+    <script>
+      (function() {
+        var stored = localStorage.getItem('dds-theme');
+        var system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = stored || system;
+      })();
+    </script>
+
+    <!-- PWA Meta Tags (미니앱 환경에서는 비활성화될 수 있음) -->
+    <meta name="theme-color" content="#0083F0" />
     <meta name="application-name" content="SPOT" />
     <meta name="description" content="대구소프트웨어마이스터고 방송부 노래 신청 시스템" />
     <meta name="apple-mobile-web-app-capable" content="yes" />

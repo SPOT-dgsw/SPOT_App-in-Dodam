@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../api/client';
@@ -31,7 +30,6 @@ function createRandomDownloadToken() {
 
 export default function Home() {
   const { user } = useAuth();
-  const [searchParams, setSearchParams] = useSearchParams();
   const { showToast } = useToast();
   const [todaySongs, setTodaySongs] = useState([]);
   const [isTomorrowDisplay, setIsTomorrowDisplay] = useState(false);
@@ -43,13 +41,18 @@ export default function Home() {
 
   const isAdmin = user && (user.role === 'MEMBER' || user.role === 'LEADER');
 
+  // URL 파라미터에서 에러 체크 (App-in-Dodam에서는 거의 사용되지 않음)
   useEffect(() => {
-    const error = searchParams.get('error');
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error');
     if (error === 'auth_failed') {
       showToast('로그인에 실패했습니다. @dgsw.hs.kr 이메일을 사용해주세요.', 'error');
-      setSearchParams({});
+      // URL에서 error 파라미터 제거
+      const url = new URL(window.location.href);
+      url.searchParams.delete('error');
+      window.history.replaceState({}, '', url.pathname + url.search);
     }
-  }, [searchParams, showToast, setSearchParams]);
+  }, [showToast]);
 
   useEffect(() => {
     Promise.all([

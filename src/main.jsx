@@ -1,11 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { BridgeProvider } from '@b1nd/aid-kit/bridge-kit/web'
+import { SafeAreaProvider } from '@b1nd/aid-kit/safe-area-provider'
+import { AppStateProvider } from '@b1nd/aid-kit/app-state'
+import { RouteProvider } from '@b1nd/aid-kit/navigation'
 import { registerSW } from 'virtual:pwa-register'
 import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { routes } from './routes'
 import './index.css'
 import App from './App.jsx'
+
+// 미니앱 환경 감지 (URL에 top/bottom 파라미터가 있으면 App-in-Dodam)
+const isAppInDodam = new URLSearchParams(window.location.search).has('top')
 
 const SW_RECOVERY_KEY = 'spot_sw_recovery_v2'
 
@@ -35,7 +42,8 @@ async function recoverServiceWorkerOnce(errorLike) {
   }
 }
 
-if ('serviceWorker' in navigator) {
+// 미니앱 환경에서는 PWA 비활성화
+if (!isAppInDodam && 'serviceWorker' in navigator) {
   const updateSW = registerSW({
     immediate: true,
     onNeedRefresh: () => {
@@ -54,12 +62,18 @@ if ('serviceWorker' in navigator) {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <BridgeProvider>
+      <SafeAreaProvider>
+        <AppStateProvider>
+          <ThemeProvider>
+            <RouteProvider routes={routes}>
+              <AuthProvider>
+                <App />
+              </AuthProvider>
+            </RouteProvider>
+          </ThemeProvider>
+        </AppStateProvider>
+      </SafeAreaProvider>
+    </BridgeProvider>
   </StrictMode>,
 )
