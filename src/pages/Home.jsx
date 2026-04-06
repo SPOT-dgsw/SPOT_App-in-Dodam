@@ -46,7 +46,7 @@ export default function Home() {
     const params = new URLSearchParams(window.location.search);
     const error = params.get('error');
     if (error === 'auth_failed') {
-      showToast('로그인에 실패했습니다. @dgsw.hs.kr 이메일을 사용해주세요.', 'error');
+      showToast('로그인에 실패했습니다. 도담 계정으로 다시 시도해주세요.', 'error');
       // URL에서 error 파라미터 제거
       const url = new URL(window.location.href);
       url.searchParams.delete('error');
