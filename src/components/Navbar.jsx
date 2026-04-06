@@ -106,12 +106,20 @@ export default function Navbar() {
             </>
           )}
           {isAdmin && !isBlocked && (
-            <button
-              onClick={() => handleNavClick('/admin')}
-              className={`cu-link text-xs sm:text-sm ${isActiveClass('/admin')}`}
-            >
-              관리
-            </button>
+            <>
+              <button
+                onClick={() => handleNavClick('/approvals')}
+                className={`cu-link text-xs sm:text-sm ${isActiveClass('/approvals')}`}
+              >
+                전자결재
+              </button>
+              <button
+                onClick={() => handleNavClick('/admin')}
+                className={`cu-link text-xs sm:text-sm ${isActiveClass('/admin')}`}
+              >
+                관리
+              </button>
+            </>
           )}
         </div>
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2.5">
