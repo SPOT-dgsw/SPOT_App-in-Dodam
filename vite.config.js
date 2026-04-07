@@ -12,6 +12,16 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'framer': ['framer-motion'],
+        },
+      },
+    },
+  },
   server: {
     proxy: {
       '/auth': 'http://localhost:4000',
