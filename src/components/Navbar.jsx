@@ -107,13 +107,7 @@ export default function Navbar() {
           )}
           {isAdmin && !isBlocked && (
             <>
-              <button
-                onClick={() => handleNavClick('/approvals')}
-                className={`cu-link text-xs sm:text-sm ${isActiveClass('/approvals')}`}
-              >
-                전자결재
-              </button>
-              <button
+<button
                 onClick={() => handleNavClick('/admin')}
                 className={`cu-link text-xs sm:text-sm ${isActiveClass('/admin')}`}
               >
