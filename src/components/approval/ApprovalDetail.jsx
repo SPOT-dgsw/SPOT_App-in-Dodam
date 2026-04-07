@@ -126,7 +126,7 @@ export default function ApprovalDetail({ approval, onClose }) {
           <div className="cu-subcard p-3 space-y-1 text-sm">
             <div className="flex gap-2">
               <span className="w-16 shrink-0" style={{ color: 'var(--cu-muted)' }}>기안자</span>
-              <span className="font-medium">{approval.user?.name} ({approval.user?.email})</span>
+              <span className="font-medium">{approval.user?.name}</span>
             </div>
             <div className="flex gap-2">
               <span className="w-16 shrink-0" style={{ color: 'var(--cu-muted)' }}>기안일시</span>
@@ -152,7 +152,7 @@ export default function ApprovalDetail({ approval, onClose }) {
               <h4 className="text-sm font-semibold mb-2">결재 내용</h4>
               <div
                 className="approval-md-body text-sm leading-relaxed p-3 rounded-xl"
-                style={{ background: 'var(--cu-surface)' }}
+                style={{ background: 'var(--cu-panel-soft)' }}
                 dangerouslySetInnerHTML={{ __html: renderMarkdown(approval.content) }}
               />
             </div>
@@ -166,7 +166,7 @@ export default function ApprovalDetail({ approval, onClose }) {
               <div
                 className="p-3 rounded-xl text-sm whitespace-pre-wrap"
                 style={{
-                  background: approval.status === 'REJECTED' ? 'var(--cu-danger-soft)' : 'var(--cu-surface)',
+                  background: approval.status === 'REJECTED' ? 'var(--cu-danger-soft)' : 'var(--cu-panel-soft)',
                   color: approval.status === 'REJECTED' ? 'var(--cu-danger)' : undefined,
                 }}
               >

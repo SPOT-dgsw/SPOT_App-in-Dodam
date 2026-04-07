@@ -12,6 +12,7 @@
   "dependencies": {
     "@b1nd/aid-kit": "^1.0.9",
     "@b1nd/dodam-design-system": "^1.0.10",
+    "@uiw/react-md-editor": "^4.1.0",
     "axios": "^1.13.5",
     "framer-motion": "^12.38.0",
     "react": "^19.2.0",

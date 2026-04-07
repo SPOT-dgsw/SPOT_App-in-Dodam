@@ -150,7 +150,7 @@ export default function Navbar() {
           ) : (
             // 미니앱에서는 도담 OAuth를 통해 자동 로그인되므로 로그인 버튼 숨김
             !isAppInDodam && (
-              <a href={`${import.meta.env.VITE_API_URL || ''}/auth/google`} className="cu-btn cu-btn-primary">
+              <a href={`${import.meta.env.VITE_API_URL || ''}/auth/dodam`} className="cu-btn cu-btn-primary">
                 로그인
               </a>
             )

@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useRouter } from '@b1nd/aid-kit/navigation';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import api from '../api/client';
-import ApprovalForm from '../components/approval/ApprovalForm';
 import ApprovalDetail from '../components/approval/ApprovalDetail';
 import RejectModal from '../components/approval/RejectModal';
 
@@ -248,16 +248,15 @@ function ApprovalManagement() {
 export default function Approvals() {
   const { user } = useAuth();
   const { showToast } = useToast();
+  const { stack } = useRouter();
   const isLeader = user?.role === 'LEADER';
   const isMember = user?.role === 'MEMBER' || user?.role === 'LEADER';
 
   const [mainTab, setMainTab] = useState(isLeader ? 'manage' : 'my');
   const [approvals, setApprovals] = useState([]);
   const [approvalFilter, setApprovalFilter] = useState('all');
-  const [showApprovalForm, setShowApprovalForm] = useState(false);
   const [selectedApproval, setSelectedApproval] = useState(null);
   const [cancellingApprovalId, setCancellingApprovalId] = useState(null);
-  const [submittingApproval, setSubmittingApproval] = useState(false);
 
   useEffect(() => {
     if (isMember) {
@@ -272,21 +271,6 @@ export default function Approvals() {
   }, [approvals, approvalFilter]);
 
   if (!isMember) return null;
-
-  const submitApproval = async (formData) => {
-    setSubmittingApproval(true);
-    try {
-      await api.post('/api/approval', formData);
-      showToast('결재 문서가 제출되었습니다.', 'success');
-      setShowApprovalForm(false);
-      const res = await api.get('/api/approval/my', { params: { pageSize: 50 } });
-      setApprovals(res.data.approvals || []);
-    } catch (err) {
-      showToast(err.response?.data?.error || '결재 제출에 실패했습니다.', 'error');
-    } finally {
-      setSubmittingApproval(false);
-    }
-  };
 
   const cancelApproval = async (approvalId) => {
     if (!confirm('대기중인 결재 문서를 취소하시겠습니까?')) return;
@@ -307,29 +291,6 @@ export default function Approvals() {
   return (
     <div className="cu-page">
       <h2 className="cu-title mb-5">전자결재</h2>
-
-      {showApprovalForm && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ background: 'rgba(0,0,0,0.4)' }}
-        >
-          <div
-            className="w-full max-w-lg rounded-2xl shadow-xl overflow-y-auto max-h-[90vh]"
-            style={{ background: 'var(--cu-bg)' }}
-          >
-            <div className="p-5 border-b" style={{ borderColor: 'var(--cu-line)' }}>
-              <h3 className="text-base font-semibold">결재 신청</h3>
-            </div>
-            <div className="p-5">
-              <ApprovalForm
-                onSubmit={submitApproval}
-                onCancel={() => setShowApprovalForm(false)}
-                loading={submittingApproval}
-              />
-            </div>
-          </div>
-        </div>
-      )}
 
       {selectedApproval && (
         <ApprovalDetail approval={selectedApproval} onClose={() => setSelectedApproval(null)} />
@@ -352,7 +313,7 @@ export default function Approvals() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <p className="text-sm" style={{ color: 'var(--cu-muted)' }}>나의 결재 문서 목록입니다.</p>
-            <button onClick={() => setShowApprovalForm(true)} className="cu-btn cu-btn-primary">
+            <button onClick={() => stack.push('/approvals/new')} className="cu-btn cu-btn-primary">
               + 결재 신청
             </button>
           </div>
