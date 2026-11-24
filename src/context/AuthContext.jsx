@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { useBridgeProvider, useBridgeResponse, Actions } from '@b1nd/aid-kit/bridge-kit/web';
-import api, { onAuthChange, refreshSession, setAccessToken, setDodamToken } from '../api/client';
+import api, { isInDodamApp, onAuthChange, refreshSession, setAccessToken, setDodamToken } from '../api/client';
 
 const AuthContext = createContext(null);
 const AUTH_POLL_INTERVAL_MS = 60000;
@@ -93,7 +93,8 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await api.post('/auth/logout');
+      // 도담 앱 안에서는 쿠키 세션을 쓰지 않아서 서버 호출 없이 토큰만 버려요 (/auth/logout은 Origin 검사로 막혀요)
+      if (!isInDodamApp()) await api.post('/auth/logout');
     } finally {
       setAccessToken(null);
     }

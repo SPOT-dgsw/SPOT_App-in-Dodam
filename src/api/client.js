@@ -13,6 +13,7 @@ const authApi = axios.create({ baseURL, withCredentials: true }); // 인터셉�
 
 let accessToken = null;
 let refreshPromise = null;
+let dodamToken = null;
 const listeners = new Set();
 
 export function setAccessToken(token) {
@@ -28,6 +29,20 @@ export function onAuthChange(fn) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 async function doRefresh() {
+  // 도담 앱 안: 쿠키 refresh 대신 브릿지로 받은 도담 토큰으로 다시 로그인해요.
+  // (/auth/refresh는 Origin 검사가 있어 App-in-Dodam 도메인에서는 막혀요. /auth/dodam은 검사하지 않아요)
+  if (dodamToken) {
+    try {
+      const res = await authApi.post('/auth/dodam', { token: dodamToken });
+      setAccessToken(res.data.access_token);
+      listeners.forEach((fn) => fn(res.data.user));
+      return res.data;
+    } catch (err) {
+      setAccessToken(null);
+      if (err.response?.status === 401) listeners.forEach((fn) => fn(null));
+      throw err;
+    }
+  }
   for (let attempt = 0; attempt < 3; attempt += 1) {
     try {
       const res = await authApi.post('/auth/refresh');
@@ -97,5 +112,11 @@ export function errorMessage(err, fallback = '오류가 발생했습니다.') {
 
 export default api;
 
-// App-in-Dodam: 백엔드는 이 헤더를 쓰지 않지만(로그인은 POST /auth/dodam), 기존 호출부 호환을 위해 남겨 둬요
-export function setDodamToken() {}
+// App-in-Dodam: 브릿지로 받은 도담 토큰. access token이 만료되면 이걸로 다시 로그인해요
+export function setDodamToken(token) {
+  dodamToken = token || null;
+}
+
+export function isInDodamApp() {
+  return dodamToken !== null;
+}
