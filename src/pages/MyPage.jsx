@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import api from '../api/client';
+import api, { errorMessage } from '../api/client';
 import SongCard from '../components/SongCard';
 
 function formatLastLogin(value) {
@@ -41,7 +41,7 @@ export default function MyPage() {
   const [cancellingSongId, setCancellingSongId] = useState(null);
 
   useEffect(() => {
-    api.get('/api/songs/my').then(r => setSongs(r.data.songs));
+    api.get('/api/songs/my').then(r => setSongs(r.data.items));
   }, []);
 
   const filteredSongs = useMemo(() => {
@@ -60,7 +60,7 @@ export default function MyPage() {
       setSongs(prev => prev.filter(song => song.id !== songId));
       showToast('신청이 취소되었습니다.', 'success');
     } catch (err) {
-      showToast(err.response?.data?.error || '신청 취소에 실패했습니다.', 'error');
+      showToast(errorMessage(err, '신청 취소에 실패했습니다.'), 'error');
     } finally {
       setCancellingSongId(null);
     }

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import api from '../api/client';
+import api, { errorMessage } from '../api/client';
 import SongCard from '../components/SongCard';
 
 const DOWNLOAD_COOKIE_NAME = 'spot_download_token';
@@ -60,9 +60,9 @@ export default function Home() {
       api.get('/api/songs/schedule'),
     ])
       .then(([todayRes, scheduleRes]) => {
-        setTodaySongs(todayRes.data.songs);
+        setTodaySongs(todayRes.data.items);
         setIsTomorrowDisplay(Boolean(todayRes.data.is_tomorrow));
-        setSchedule(scheduleRes.data.songs);
+        setSchedule(scheduleRes.data.items);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -96,7 +96,7 @@ export default function Home() {
     }
   };
 
-  const handleDownload = (videoId, title) => {
+  const handleDownload = async (videoId, title) => {
     if (downloadingVideoId) return;
 
     stopDownloadTracking();
@@ -106,7 +106,19 @@ export default function Home() {
     setDownloadingVideoId(videoId);
     showToast('다운로드를 준비 중입니다. 잠시만 기다려주세요.', 'info');
 
-    const url = `${import.meta.env.VITE_API_URL || ''}/api/admin/wakeup/download/${videoId}?downloadToken=${encodeURIComponent(downloadToken)}`;
+    // 브라우저 다운로드(<a href>)는 Authorization 헤더를 못 보내서, 60초짜리 서명 링크를 먼저 받아요
+    let ticketUrl;
+    try {
+      const res = await api.post(`/api/admin/wakeup/download/${videoId}/ticket`);
+      ticketUrl = new URL(res.data.url);
+    } catch (err) {
+      setDownloadingVideoId(null);
+      showToast(errorMessage(err, '다운로드 링크를 만들지 못했습니다.'), 'error');
+      return;
+    }
+    ticketUrl.searchParams.set('download_token', downloadToken);
+    // 백엔드가 준 주소의 경로·쿼리만 써서 프록시(같은 origin)를 거치게 해요
+    const url = `${import.meta.env.VITE_API_URL || ''}${ticketUrl.pathname}${ticketUrl.search}`;
     const link = document.createElement('a');
     link.href = url;
     link.download = `${title}.mp3`;
